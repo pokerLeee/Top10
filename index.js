@@ -1,61 +1,54 @@
-const path = require("path");
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
-const { init: initDB, Counter } = require("./db");
+const express = require('express')
+const bodyParser = require('body-parser')
+const axios = require('axios')
+const fs = require('fs')
 
-const logger = morgan("tiny");
+const PORT = process.env.PORT || 80
+const HOST = '0.0.0.0'
 
-const app = express();
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use(cors());
-app.use(logger);
+const app = express()
 
-// 首页
-app.get("/", async (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+app.use(bodyParser.raw())
+app.use(bodyParser.json({}))
+app.use(bodyParser.urlencoded({ extended: true }))
+
+const client = axios.default
+
+const indexPage = fs.readFileSync('index.html', 'utf-8')
+
+app.get('/', async (req, res) => {
+    res.send(indexPage)
+})
+
+app.post('/', async (req, res) => {
+    // 没有x-wx-source头的，不是微信的来源，不处理
+    if (!req.headers['x-wx-source']) {
+        res.status(400).send('Invalid request source')
+        return
+    }
+    console.log('==========')
+    console.log('收到消息：')
+    console.log(req.body)
+    console.log('==========')
+
+    // 免鉴权发送消息
+    const weixinAPI = `http://api.weixin.qq.com/cgi-bin/message/custom/send`
+    const payload = {
+        touser: req.headers['x-wx-openid'],
+        msgtype: 'text',
+        text: {
+            content: `云托管接收消息推送成功，内容如下：\n${JSON.stringify(req.body, null, 2)}`
+        }
+    }
+    const result = await client.post(weixinAPI, payload)
+
+    console.log('==========')
+    console.log('发送回复结果：')
+    console.log(result.data)
+    console.log('==========')
+
+    res.send('success')
 });
 
-// 更新计数
-app.post("/api/count", async (req, res) => {
-  const { action } = req.body;
-  if (action === "inc") {
-    await Counter.create();
-  } else if (action === "clear") {
-    await Counter.destroy({
-      truncate: true,
-    });
-  }
-  res.send({
-    code: 0,
-    data: await Counter.count(),
-  });
-});
-
-// 获取计数
-app.get("/api/count", async (req, res) => {
-  const result = await Counter.count();
-  res.send({
-    code: 0,
-    data: result,
-  });
-});
-
-// 小程序调用，获取微信 Open ID
-app.get("/api/wx_openid", async (req, res) => {
-  if (req.headers["x-wx-source"]) {
-    res.send(req.headers["x-wx-openid"]);
-  }
-});
-
-const port = process.env.PORT || 80;
-
-async function bootstrap() {
-  await initDB();
-  app.listen(port, () => {
-    console.log("启动成功", port);
-  });
-}
-
-bootstrap();
+app.listen(PORT, HOST)
+console.log(`Running on http://${HOST}:${PORT}`)
