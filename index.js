@@ -29,7 +29,6 @@ app.get('/', async (req, res) => {
 app.post('/', async (req, res) => {
     console.log('/ post 接口被调用')
     // 没有x-wx-source头的，不是微信的来源，不处理
-    /*
     if (!req.headers['x-wx-source']) {
         res.status(400).send('Invalid request source')
         return
@@ -55,7 +54,7 @@ app.post('/', async (req, res) => {
     console.log('发送回复结果：')
     console.log(result.data)
     console.log('==========')
-    */
+
     res.send('success')
 });
 
