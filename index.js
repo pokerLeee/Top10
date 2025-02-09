@@ -51,6 +51,9 @@ app.post('/', async (req, res) => {
     const result = await client.post(weixinAPI, payload)
 
     console.log('==========')
+    console.log('Payload:')
+    console.log(payload)
+    console.log('==========')
     console.log('发送回复结果：')
     console.log(result.data)
     console.log('==========')
