@@ -4,7 +4,7 @@
       "name": "top10",
       "domain": "",
       "ip": "",
-      "mode": "compose"
+      "containerId": "ae207cbd0fc8d44afeed8d78bd3e618ac5d642e06c0e10625f14580337076748"
     }
   ],
   "config": {

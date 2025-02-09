@@ -2,12 +2,17 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const axios = require('axios')
 const fs = require('fs')
+const path = require("path");
+const cors = require("cors");
+const morgan = require("morgan");
+const { init: initDB, Counter } = require("./db");
+
+const logger = morgan("tiny");
 
 const PORT = process.env.PORT || 80
 const HOST = '0.0.0.0'
 
 const app = express()
-
 app.use(bodyParser.raw())
 app.use(bodyParser.json({}))
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -17,15 +22,19 @@ const client = axios.default
 const indexPage = fs.readFileSync('index.html', 'utf-8')
 
 app.get('/', async (req, res) => {
+    console.log('/ get 接口被调用')
     res.send(indexPage)
 })
 
 app.post('/', async (req, res) => {
+    console.log('/ post 接口被调用')
     // 没有x-wx-source头的，不是微信的来源，不处理
+    /*
     if (!req.headers['x-wx-source']) {
         res.status(400).send('Invalid request source')
         return
     }
+    
     console.log('==========')
     console.log('收到消息：')
     console.log(req.body)
@@ -46,7 +55,7 @@ app.post('/', async (req, res) => {
     console.log('发送回复结果：')
     console.log(result.data)
     console.log('==========')
-
+    */
     res.send('success')
 });
 
