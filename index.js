@@ -23,12 +23,12 @@ const client = axios.default
 const indexPage = fs.readFileSync('index.html', 'utf-8')
 
 
-/*
+
 app.get('/', async (req, res) => {
     console.log('/ get 接口被调用')
     res.send(indexPage)
 })
-*/
+
 /*
 app.get('/', function (req, res) {
     request({
@@ -51,19 +51,19 @@ app.get('/', function (req, res) {
     });
 });
 */
-
+/*
 app.get('/', function (req, res) {
     request({
         method: 'POST',
         //url: 'http://api.weixin.qq.com/wxa/msg_sec_check',
         //url: 'http://api.weixin.qq.com/cgi-bin/callback/check',
         url:  'http://api.weixin.qq.com/cgi-bin/get_api_domain_ip',
-        /*
+        
         body: JSON.stringify({
             action: 'all',
             check_operator: 'DEFAULT'
         })
-        */
+        
     }, function (error, response) {
         console.log('/ get 接口被调用')
         if (error) {
@@ -75,7 +75,7 @@ app.get('/', function (req, res) {
     });
 });
 
-
+*/
 
 app.post("/message/simple", async (req, res) => {
     console.log('消息推送', req.body)
