@@ -119,4 +119,19 @@
   function testClick() {
     alert('按钮点击成功!');
   }
+
+  function openGameResult() {
+    // 从URL参数中获取numbers
+    const urlParams = new URLSearchParams(window.location.search);
+    const numbers = urlParams.get('numbers');
+    
+    // 构建结果页URL，使用相同的numbers
+    const resultUrl = window.location.pathname + '?' + new URLSearchParams({
+        players: urlParams.get('players'),
+        numbers: numbers,  // 使用相同的numbers
+        section: 'result'
+    }).toString();
+    
+    window.location.href = resultUrl;
+  }
 </script>

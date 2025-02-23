@@ -21,8 +21,23 @@ function createGame() {
     return;
   }
 
-  // 生成随机四位数房间号
-  const roomNumber = Math.floor(1000 + Math.random() * 9000);
+  // 生成房间号
+  // a: 玩家数量 (2-9)
+  const a = playerCount;
+  
+  // b: 游戏类型 (1=mild, 2=spicy, 3=extreme)
+  const typeMap = {
+    'mild': 1,
+    'spicy': 2,
+    'extreme': 3
+  };
+  const b = typeMap[questionType];
+  
+  // cd: 随机数 (00-99)
+  const cd = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+  
+  // 组合成4位数房间号
+  const roomNumber = `${a}${b}${cd}`;
   
   // 隐藏创建部分，显示房间信息
   document.getElementById('createSection').style.display = 'none';
