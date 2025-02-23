@@ -241,37 +241,50 @@ function openGameCard() {
   // 生成随机数作为scale-number
   const scaleNumber = Math.floor(Math.random() * 10) + 1;
   
-  // 根据题目类型选择问题和标签
-  const questions = {
-    mild: [
-      {question: "说出一位YouTuber。", negative: "厌恶", positive: "喜爱"},
-      {question: "说出一个童年回忆。", negative: "讨厌", positive: "喜欢"},
-      {question: "推荐一首歌。", negative: "烦躁", positive: "沉醉"}
-    ],
-    spicy: [
-      {question: "分享一个秘密。", negative: "羞耻", positive: "自豪"},
-      {question: "描述一次冒险。", negative: "后悔", positive: "刺激"},
-      {question: "讲述一个尴尬经历。", negative: "痛苦", positive: "有趣"}
-    ],
-    extreme: [
-      {question: "最疯狂的想法是什么？", negative: "疯狂", positive: "天才"},
-      {question: "做过最大胆的事是什么？", negative: "出格", positive: "勇敢"},
-      {question: "最难以启齿的故事是什么？", negative: "糟糕", positive: "精彩"}
-    ]
-  };
-
-  // 随机选择一个问题
-  const typeQuestions = questions[questionType] || questions.mild;
-  const randomIndex = Math.floor(Math.random() * typeQuestions.length);
-  const selectedQuestion = typeQuestions[randomIndex];
+  // 根据题目类型加载对应的题库
+  let selectedQuestion;
   
-  // 构建跳转URL，添加新的参数
-  const gameCardUrl = `gamecard.html?room=${roomNumber}&players=${playerCount}&type=${questionType}`
-    + `&question=${encodeURIComponent(selectedQuestion.question)}`
-    + `&negative=${encodeURIComponent(selectedQuestion.negative)}`
-    + `&positive=${encodeURIComponent(selectedQuestion.positive)}`
-    + `&scale=${scaleNumber}`;
-  
-  // 跳转到游戏卡片页面
-  window.location.href = gameCardUrl;
+  if (questionType === 'mild') {
+    // 从mild_questions.js中获取题目
+    const questions = mildQuestions.questions;
+    const randomIndex = Math.floor(Math.random() * questions.length);
+    selectedQuestion = questions[randomIndex];
+    
+    // 构建跳转URL，添加新的参数
+    const gameCardUrl = `gamecard.html?room=${roomNumber}&players=${playerCount}&type=${questionType}`
+      + `&question=${encodeURIComponent(selectedQuestion.question)}`
+      + `&negative=${encodeURIComponent(selectedQuestion.negative)}`
+      + `&positive=${encodeURIComponent(selectedQuestion.positive)}`
+      + `&scale=${scaleNumber}`
+      + `&id=${selectedQuestion.id}`;
+    
+    // 跳转到游戏卡片页面
+    window.location.href = gameCardUrl;
+  } else {
+    // 其他类型题目保持原有逻辑
+    const questions = {
+      spicy: [
+        {question: "分享一个秘密。", negative: "羞耻", positive: "自豪"},
+        // ...
+      ],
+      extreme: [
+        {question: "最疯狂的想法是什么？", negative: "疯狂", positive: "天才"},
+        // ...
+      ]
+    };
+    
+    const typeQuestions = questions[questionType] || questions.spicy;
+    const randomIndex = Math.floor(Math.random() * typeQuestions.length);
+    selectedQuestion = typeQuestions[randomIndex];
+    
+    // 构建跳转URL，添加新的参数
+    const gameCardUrl = `gamecard.html?room=${roomNumber}&players=${playerCount}&type=${questionType}`
+      + `&question=${encodeURIComponent(selectedQuestion.question)}`
+      + `&negative=${encodeURIComponent(selectedQuestion.negative)}`
+      + `&positive=${encodeURIComponent(selectedQuestion.positive)}`
+      + `&scale=${scaleNumber}`;
+    
+    // 跳转到游戏卡片页面
+    window.location.href = gameCardUrl;
+  }
 } 

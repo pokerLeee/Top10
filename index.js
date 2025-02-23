@@ -80,13 +80,19 @@ app.get('/', function (req, res) {
 
 app.post("/message/simple", async (req, res) => {
     console.log('消息推送', req.body)
-    // 从 header 中取appid，如果 from-appid 不存在，则不是资源复用场景，可以直接传空字符串，使用环境所属账号发起云调用
     const appid = req.headers['x-wx-from-appid'] || ''
     const {ToUserName, FromUserName, MsgType, Content, CreateTime} = req.body
     console.log('推送接收的账号', ToUserName, '创建时间', CreateTime)
     if (MsgType === 'text') {
-        //message = await simpleResponse(Content)
-        message = `云托管接收消息推送成功，内容如下：\n${JSON.stringify(req.body, null, 2)}`
+        let message;
+        if (Content === "Hello world") {
+            message = `云托管接收消息推送成功，内容如下：\n${JSON.stringify(req.body, null, 2)}`;
+        } else if (/^\d{4}$/.test(Content)) {
+            message = "<a href='https://prod-5gonn6747c1ca31c-1333784425.tcloudbaseapp.com/creatgame.html'>开始游戏</a>";
+        } else {
+            message = `云托管接收消息推送成功，内容如下：\n${JSON.stringify(req.body, null, 2)}`;
+        }
+        
         res.send({
             ToUserName: FromUserName,
             FromUserName: ToUserName,

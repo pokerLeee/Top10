@@ -299,6 +299,7 @@ body::after {
 
 /* 卡片样式 */
 .card {
+  position: relative;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 16px;
   padding: 20px;
@@ -522,4 +523,12 @@ body::after {
     transform: translateY(-100px) scale(1) rotate(360deg);
     opacity: 0;
   }
+}
+
+.question-id {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
 } 

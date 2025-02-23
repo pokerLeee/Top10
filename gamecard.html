@@ -1,11 +1,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
 <link rel="stylesheet" href="styles.css">
+<script src="mild_questions.js"></script>
 
 <div class="container">
   <div class="section-title">本轮题目</div>
   
   <div class="card">
+    <div class="question-id" id="questionId"></div>
     <div class="question" id="questionText"></div>
     <div class="scale-label">
       (<strong>1</strong>是最<span class="green" id="negativeText"></span>，<strong>10</strong>是最<span class="red" id="positiveText"></span>)
@@ -28,9 +30,43 @@
     </div>
     <div class="emoji">🦄</div>
   </div>
+
+  <div class="flip-button-container">
+    <button class="flip-button" onclick="openGameResult()">开始翻牌</button>
+    <p class="form-hint">查看游戏结果</p>
+  </div>
 </div>
 
 <script>
+  // 引入script.js中的函数
+  function getUrlParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+  }
+  
+  function generateUniqueRandomNumbers(count, min, max) {
+    const numbers = new Set();
+    while(numbers.size < count) {
+      numbers.add(Math.floor(Math.random() * (max - min + 1)) + min);
+    }
+    return Array.from(numbers);
+  }
+  
+  function openGameResult() {
+    // 从当前页面的 URL 参数中获取玩家数量
+    const playerCount = parseInt(getUrlParam('players')) || 4;
+    
+    // 生成随机数
+    const numbers = generateUniqueRandomNumbers(playerCount, 1, 10);
+    
+    // 将数字数组转换为URL参数
+    const numbersParam = numbers.join(',');
+    
+    // 构建新的URL并跳转
+    const resultUrl = `creatgame.html?players=${playerCount}&numbers=${numbersParam}&section=result`;
+    window.location.href = resultUrl;
+  }
+
   window.onload = function() {
     // 获取URL参数
     const urlParams = new URLSearchParams(window.location.search);
@@ -39,6 +75,7 @@
     document.getElementById('questionText').textContent = decodeURIComponent(urlParams.get('question') || '说出一位YouTuber。');
     document.getElementById('negativeText').textContent = decodeURIComponent(urlParams.get('negative') || '厌恶');
     document.getElementById('positiveText').textContent = decodeURIComponent(urlParams.get('positive') || '喜爱');
+    document.getElementById('questionId').textContent = urlParams.get('id') || '';
     
     // 设置随机数
     const scaleNumber = urlParams.get('scale') || Math.floor(Math.random() * 10) + 1;
