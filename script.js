@@ -190,6 +190,85 @@ function createPoopEmoji(element, event) {
   });
 }
 
+// 显示游戏卡片
+function showGameCard() {
+  document.getElementById('createSection').style.display = 'none';
+  document.getElementById('roomSection').style.display = 'none';
+  document.getElementById('resultSection').style.display = 'none';
+  document.getElementById('gameCardSection').style.display = 'block';
+
+  // 获取URL参数
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // 设置问题和标签文本
+  document.getElementById('questionText').textContent = decodeURIComponent(urlParams.get('question') || '说出一位YouTuber。');
+  document.getElementById('negativeText').textContent = decodeURIComponent(urlParams.get('negative') || '厌恶');
+  document.getElementById('positiveText').textContent = decodeURIComponent(urlParams.get('positive') || '喜爱');
+  document.getElementById('questionId').textContent = urlParams.get('id') || '';
+  
+  // 设置随机数
+  const scaleNumber = urlParams.get('scale') || Math.floor(Math.random() * 10) + 1;
+  document.getElementById('randomNumber').textContent = scaleNumber;
+  
+  // 设置玩家标题
+  const playerNumber = urlParams.get('currentPlayer') || 1;
+  document.getElementById('playerTitle').textContent = `${playerNumber}号玩家 你的号码是`;
+  
+  // 根据题目类型设置卡片背景颜色和点击效果
+  const questionType = urlParams.get('type');
+  const card = document.querySelector('.card');
+  const numberCard = document.querySelector('.number-card');
+  
+  if (questionType === 'spicy') {
+    card.classList.add('spicy-card');
+    numberCard.classList.add('spicy-card');
+    // 添加点击事件，创建辣椒emoji
+    card.addEventListener('click', createSpicyEmoji);
+    numberCard.addEventListener('click', createSpicyEmoji);
+  } else if (questionType === 'extreme') {
+    card.classList.add('extreme-card');
+    numberCard.classList.add('extreme-card');
+    // 添加点击事件，创建紫色泡泡
+    card.addEventListener('click', createPoisonBubble);
+    numberCard.addEventListener('click', createPoisonBubble);
+  }
+}
+
+// 创建辣椒emoji的函数
+function createSpicyEmoji(event) {
+  const emoji = document.createElement('div');
+  emoji.textContent = '🌶️';
+  emoji.className = 'floating-emoji';
+  
+  // 设置初始位置为点击位置
+  emoji.style.left = (event.clientX - 10) + 'px';
+  emoji.style.top = (event.clientY - 10) + 'px';
+  
+  document.body.appendChild(emoji);
+  
+  // 动画结束后移除元素
+  emoji.addEventListener('animationend', () => {
+    document.body.removeChild(emoji);
+  });
+}
+
+// 创建紫色泡泡的函数
+function createPoisonBubble(event) {
+  const bubble = document.createElement('div');
+  bubble.className = 'poison-bubble';
+  
+  // 设置初始位置为点击位置
+  bubble.style.left = (event.clientX - 10) + 'px';
+  bubble.style.top = (event.clientY - 10) + 'px';
+  
+  document.body.appendChild(bubble);
+  
+  // 动画结束后移除元素
+  bubble.addEventListener('animationend', () => {
+    document.body.removeChild(bubble);
+  });
+}
+
 // 页面加载完成时执行
 window.onload = function() {
   const section = getUrlParam('section');
@@ -199,12 +278,17 @@ window.onload = function() {
     // 显示结果页面
     document.getElementById('createSection').style.display = 'none';
     document.getElementById('roomSection').style.display = 'none';
+    document.getElementById('gameCardSection').style.display = 'none';
     document.getElementById('resultSection').style.display = 'block';
     displayGameResults();
+  } else if (getUrlParam('question')) {
+    // 显示游戏卡片
+    showGameCard();
   } else if (roomNumber) {
     // 显示房间信息
     document.getElementById('createSection').style.display = 'none';
     document.getElementById('roomSection').style.display = 'block';
+    document.getElementById('gameCardSection').style.display = 'none';
     document.getElementById('resultSection').style.display = 'none';
     displayRoomInfo();
   }
@@ -220,8 +304,10 @@ function openGameResult() {
   // 将数字数组转换为URL参数
   const numbersParam = numbers.join(',');
   
-  // 隐藏房间信息部分，显示结果部分
+  // 隐藏所有其他部分，显示结果部分
   document.getElementById('roomSection').style.display = 'none';
+  document.getElementById('gameCardSection').style.display = 'none';
+  document.getElementById('createSection').style.display = 'none';
   document.getElementById('resultSection').style.display = 'block';
   
   // 更新 URL 以支持刷新
@@ -241,6 +327,9 @@ function openGameCard() {
   // 生成随机数作为scale-number
   const scaleNumber = Math.floor(Math.random() * 10) + 1;
   
+  // 生成随机玩家号码（1到playerCount之间）
+  const currentPlayer = Math.floor(Math.random() * playerCount) + 1;
+  
   // 根据题目类型加载对应的题库
   let selectedQuestion;
   
@@ -250,16 +339,18 @@ function openGameCard() {
     const randomIndex = Math.floor(Math.random() * questions.length);
     selectedQuestion = questions[randomIndex];
     
-    // 构建跳转URL，添加新的参数
-    const gameCardUrl = `gamecard.html?room=${roomNumber}&players=${playerCount}&type=${questionType}`
+    // 构建URL参数
+    const gameCardUrl = `?room=${roomNumber}&players=${playerCount}&type=${questionType}`
       + `&question=${encodeURIComponent(selectedQuestion.question)}`
       + `&negative=${encodeURIComponent(selectedQuestion.negative)}`
       + `&positive=${encodeURIComponent(selectedQuestion.positive)}`
       + `&scale=${scaleNumber}`
-      + `&id=${selectedQuestion.id}`;
+      + `&id=${selectedQuestion.id}`
+      + `&currentPlayer=${currentPlayer}`;
     
-    // 跳转到游戏卡片页面
-    window.location.href = gameCardUrl;
+    // 更新 URL 并显示游戏卡片
+    window.history.replaceState(null, '', gameCardUrl);
+    showGameCard();
   } else {
     // 其他类型题目保持原有逻辑
     const questions = {
@@ -277,14 +368,15 @@ function openGameCard() {
     const randomIndex = Math.floor(Math.random() * typeQuestions.length);
     selectedQuestion = typeQuestions[randomIndex];
     
-    // 构建跳转URL，添加新的参数
-    const gameCardUrl = `gamecard.html?room=${roomNumber}&players=${playerCount}&type=${questionType}`
+    // 构建URL参数
+    const gameCardUrl = `?room=${roomNumber}&players=${playerCount}&type=${questionType}`
       + `&question=${encodeURIComponent(selectedQuestion.question)}`
       + `&negative=${encodeURIComponent(selectedQuestion.negative)}`
       + `&positive=${encodeURIComponent(selectedQuestion.positive)}`
       + `&scale=${scaleNumber}`;
     
-    // 跳转到游戏卡片页面
-    window.location.href = gameCardUrl;
+    // 更新 URL 并显示游戏卡片
+    window.history.replaceState(null, '', gameCardUrl);
+    showGameCard();
   }
 } 

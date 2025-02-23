@@ -1,0 +1,52 @@
+{
+    "questions": [
+      {
+        "id": "N001",
+        "question": "如果你得罪了一个女巫，你会被她下怎样的诅咒？",
+        "negative": "轻",
+        "positive": "重"
+      },
+      {
+        "id": "N002",
+        "question": "我初来乍到第一次毁灭地球，你有啥建议不？",
+        "negative": "没用",
+        "positive": "有用"
+      },
+      {
+        "id": "N003",
+        "question": "新生代偶像做什么容易走红？",
+        "negative": "变糊咖",
+        "positive": "走红"
+      },
+      {
+        "id": "N004",
+        "question": "你培育出一批新品种的玫瑰，请为它定一句花语吧！",
+        "negative": "诡异",
+        "positive": "富有美感"
+      },
+      {
+        "id": "N007",
+        "question": "请以「可以吗？」作为结尾造句。",
+        "negative": "普通",
+        "positive": "让人火大"
+      },
+      {
+        "id": "N008",
+        "question": "无意间喝下了魔药师的新药水，你会发生什么变化？",
+        "negative": "有害",
+        "positive": "有益"
+      },
+      {
+        "id": "N009",
+        "question": "仅仅靠自己的门路能做到什么？",
+        "negative": "没门路",
+        "positive": "你有门路"
+      },
+      {
+        "id": "N010",
+        "question": "请随意编一个都市怪谈，如半夜不要照镜子，晚上看贞子她会爬出来等。",
+        "negative": "平淡",
+        "positive": "恐怖"
+      }     
+  ]
+}

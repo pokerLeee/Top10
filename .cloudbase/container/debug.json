@@ -3,7 +3,8 @@
     {
       "name": "top10",
       "domain": "",
-      "ip": ""
+      "ip": "",
+      "mode": "compose"
     }
   ],
   "config": {

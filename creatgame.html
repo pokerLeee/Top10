@@ -53,16 +53,17 @@
     </div>
 
     <div class="notice">
-      <p>回复房间号，可以再次查看房间信息</p>
-      <p class="share-text">如果有玩家未关注脑洞量表助手，请将脑洞量表助手微信号(naodongliangbiaozhushou)分享给你的好友！</p>
+      <p>在公众号中回复该房间号，即可开始游戏</p>
+      <p class="share-text">如果有玩家未关注脑洞量表助手，请将脑洞量表助手微信号(top10zhushou)分享给你的好友！</p>
     </div>
-
+    <!--
     <div class="flip-button-container">
       <button class="flip-button" onclick="openGameResult()">开始翻牌</button>
       <p class="form-hint">查看游戏结果</p>
       <button class="flip-button game-card-button" onclick="openGameCard()">进入游戏卡片</button>
       <p class="form-hint">查看游戏卡片</p>
     </div>
+    -->
   </div>
 
   <!-- 游戏结果部分 -->
@@ -75,6 +76,41 @@
     
     <div class="result-container">
       <div id="playerResults"></div>
+    </div>
+  </div>
+
+  <!-- 游戏卡片部分 -->
+  <div id="gameCardSection" style="display: none;">
+    <div class="section-title">本轮题目</div>
+    
+    <div class="card">
+      <div class="question-id" id="questionId"></div>
+      <div class="question" id="questionText"></div>
+      <div class="scale-label">
+        (<strong>1</strong>是最<span class="green" id="negativeText"></span>，<strong>10</strong>是最<span class="red" id="positiveText"></span>)
+      </div>
+    </div>
+
+    <div class="section-title" id="playerTitle">1号玩家 你的号码是</div>
+    <div class="number-card">
+      <div class="random-number" id="randomNumber">5</div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="emoji">💩</div>
+      <div class="scale-container">
+        <div class="scale-number">1</div>
+        <div class="scale-bar">
+          <img src="topten.svg" class="topten-logo" alt="TOP TEN">
+        </div>
+        <div class="scale-number">10</div>
+      </div>
+      <div class="emoji">🦄</div>
+    </div>
+
+    <div class="flip-button-container">
+      <button class="flip-button" onclick="openGameResult()">开始翻牌</button>
+      <p class="form-hint">查看游戏结果</p>
     </div>
   </div>
 </div>

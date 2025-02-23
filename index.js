@@ -8,141 +8,197 @@ const cors = require("cors");
 const morgan = require("morgan");
 const { init: initDB, Counter } = require("./db");
 
-const logger = morgan("tiny");
+// 读取问题数据
+const mildQuestions = JSON.parse(
+    fs.readFileSync(path.join(__dirname, 'mildQuestion.json'), 'utf8')
+);
 
-const PORT = process.env.PORT || 80
-const HOST = '0.0.0.0'
+// 配置常量
+const CONFIG = {
+    PORT: process.env.PORT || 80,
+    HOST: '0.0.0.0',
+    GAME_BASE_URL: 'https://prod-5gonn6747c1ca31c-1333784425.tcloudbaseapp.com/creatgame.html'
+}
 
-const app = express()
-app.use(bodyParser.raw())
-app.use(bodyParser.json({}))
-app.use(bodyParser.urlencoded({ extended: true }))
+// 初始化 Express 应用
+const initializeApp = () => {
+    const app = express()
+    const logger = morgan("tiny");
+    
+    app.use(bodyParser.raw())
+    app.use(bodyParser.json({}))
+    app.use(bodyParser.urlencoded({ extended: true }))
+    
+    return app
+}
 
-const client = axios.default
-
-const indexPage = fs.readFileSync('index.html', 'utf-8')
-const webPage = fs.readFileSync('web.html', 'utf-8')
-
-
-app.get('/', async (req, res) => {
-    console.log('/ get 接口被调用')
-    //res.send(indexPage)
-    res.send(webPage)
-})
-
-/*
-app.get('/', function (req, res) {
-    request({
-        method: 'POST',
-        url: 'http://api.weixin.qq.com/wxa/msg_sec_check',
-        body: JSON.stringify({
-            openid: 'oyN7n67pI66UH8V0v4JViQ3bkPl4',
-            version: 2,
-            scene: 2,
-            content: '安全检测文本'
-        })
-    }, function (error, response) {
-        console.log('/ get 接口被调用')
-        if (error) {
-            res.send(error.toString());
-        } else {
-            console.log('接口返回内容', response.body);
-            res.send(JSON.parse(response.body));
-        }
-    });
-});
-*/
-/*
-app.get('/', function (req, res) {
-    request({
-        method: 'POST',
-        //url: 'http://api.weixin.qq.com/wxa/msg_sec_check',
-        //url: 'http://api.weixin.qq.com/cgi-bin/callback/check',
-        url:  'http://api.weixin.qq.com/cgi-bin/get_api_domain_ip',
-        
-        body: JSON.stringify({
-            action: 'all',
-            check_operator: 'DEFAULT'
-        })
-        
-    }, function (error, response) {
-        console.log('/ get 接口被调用')
-        if (error) {
-            res.send(error.toString());
-        } else {
-            console.log('接口返回内容', response.body);
-            res.send(JSON.parse(response.body));
-        }
-    });
-});
-
-*/
-
-app.post("/message/simple", async (req, res) => {
-    console.log('消息推送', req.body)
-    const appid = req.headers['x-wx-from-appid'] || ''
-    const {ToUserName, FromUserName, MsgType, Content, CreateTime} = req.body
-    console.log('推送接收的账号', ToUserName, '创建时间', CreateTime)
-    if (MsgType === 'text') {
-        let message;
-        if (Content === "Hello world") {
-            message = `云托管接收消息推送成功，内容如下：\n${JSON.stringify(req.body, null, 2)}`;
-        } else if (/^\d{4}$/.test(Content)) {
-            message = "<a href='https://prod-5gonn6747c1ca31c-1333784425.tcloudbaseapp.com/creatgame.html'>开始游戏</a>";
-        } else {
-            message = `云托管接收消息推送成功，内容如下：\n${JSON.stringify(req.body, null, 2)}`;
-        }
-        
-        res.send({
-            ToUserName: FromUserName,
-            FromUserName: ToUserName,
-            CreateTime: CreateTime,
-            MsgType: 'text',
-            Content: message,
-        })
-    } else {
-        res.send('success')
+// 加载页面内容
+const loadPages = () => {
+    return {
+        indexPage: fs.readFileSync('index.html', 'utf-8'),
+        webPage: fs.readFileSync('web.html', 'utf-8')
     }
-})
+}
 
+// 生成随机数字数组
+const generateUniqueRandomNumbers = (count, min = 1, max = 10) => {
+    const numbers = [];
+    while (numbers.length < count) {
+        const num = Math.floor(Math.random() * (max - min + 1)) + min;
+        if (!numbers.includes(num)) {
+            numbers.push(num);
+        }
+    }
+    return numbers;
+}
 
-app.post('/', async (req, res) => {
-    console.log('/ post 接口被调用')
-    // 没有x-wx-source头的，不是微信的来源，不处理
-    if (!req.headers['x-wx-source']) {
-        res.status(400).send('Invalid request source')
-        return
+// 生成结果页URL
+const generateResultUrl = (roomNumber) => {
+    const playerCount = 6;
+    const numbers = generateUniqueRandomNumbers(playerCount);
+    
+    const queryParams = new URLSearchParams({
+        players: playerCount,
+        numbers: numbers.join(','),
+        section: 'result'
+    })
+    
+    return `${CONFIG.GAME_BASE_URL}?${queryParams.toString()}`
+}
+
+// 处理文本消息
+const handleTextMessage = (content, fromUserName, toUserName, createTime, body) => {
+    if (content === "Hello world") {
+        return createTextResponse(
+            `云托管接收消息推送成功，内容如下：\n${JSON.stringify(body, null, 2)}`,
+            fromUserName,
+            toUserName,
+            createTime
+        )
+    } 
+    
+    if (/^\d{4}$/.test(content)) {
+        const gameUrl = generateGameUrl(content)
+        const resultUrl = generateResultUrl(content)
+        const gameParams = {
+            currentPlayer: 5,
+            scale: 2
+        }
+        const selectedQuestion = getRandomQuestion()
+        
+        const message = `${gameParams.currentPlayer}号玩家，你的号码是${gameParams.scale}\n` +
+            `<a href='${gameUrl}'>点击查看题目卡片</a>\n` +
+            `本轮题目是: \n` +
+            `${selectedQuestion.question}\n` +
+            `1是最${selectedQuestion.negative}，10是最${selectedQuestion.positive}\n` +
+            `<a href='${resultUrl}'>点击开始翻牌</a>`
+        
+        return createTextResponse(
+            message,
+            fromUserName,
+            toUserName,
+            createTime
+        )
     }
     
-    console.log('==========')
-    console.log('收到消息：')
-    console.log(req.body)
-    console.log('==========')
+    return createTextResponse(
+        `云托管接收消息推送成功，内容如下：\n${JSON.stringify(body, null, 2)}`,
+        fromUserName,
+        toUserName,
+        createTime
+    )
+}
 
-    /*
-    // 免鉴权发送消息
-    const weixinAPI = `http://api.weixin.qq.com/cgi-bin/message/custom/send`
-    const payload = {
-        touser: req.headers['x-wx-openid'],
-        msgtype: 'text',
-        text: {
-            content: `云托管接收消息推送成功，内容如下：\n${JSON.stringify(req.body, null, 2)}`
-        }
+// 生成游戏URL
+const generateGameUrl = (roomNumber) => {
+    const gameParams = {
+        room: roomNumber,
+        players: 6,
+        type: 'mild',
+        currentPlayer: 5,
+        scale: 2
     }
-    const result = await client.post(weixinAPI, payload)
-    */
-    /*
-    //console.log('==========')
-    //console.log('Payload:')
-    //console.log(payload)
-    console.log('==========')
-    */
-    console.log('发送回复结果：')
-    //console.log(result.data)
-    console.log('==========')
+    
+    const selectedQuestion = getRandomQuestion()
+    
+    const queryParams = new URLSearchParams({
+        ...gameParams,
+        question: selectedQuestion.question,
+        negative: selectedQuestion.negative,
+        positive: selectedQuestion.positive,
+        id: selectedQuestion.id
+    })
+    
+    return `${CONFIG.GAME_BASE_URL}?${queryParams.toString()}`
+}
 
-    //res.send('success')
-});
+// 获取随机问题
+const getRandomQuestion = () => {
+    const questions = mildQuestions.questions
+    const randomIndex = Math.floor(Math.random() * questions.length)
+    return questions[randomIndex]
+}
 
-app.listen(PORT, HOST)
-console.log(`Running on http://${HOST}:${PORT}`)
+// 创建文本响应
+const createTextResponse = (content, toUser, fromUser, createTime) => {
+    return {
+        ToUserName: toUser,
+        FromUserName: fromUser,
+        CreateTime: createTime,
+        MsgType: 'text',
+        Content: content
+    }
+}
+
+// 验证请求来源
+const validateWeixinSource = (req) => {
+    if (!req.headers['x-wx-source']) {
+        //return false
+        return true
+    }
+    return true
+}
+
+// 主函数
+const main = () => {
+    const app = initializeApp()
+    const { indexPage, webPage } = loadPages()
+    
+    // 路由处理
+    app.get('/', async (req, res) => {
+        console.log('/ get 接口被调用')
+        res.send(indexPage)
+    })
+    
+    app.post("/message/simple", async (req, res) => {
+        console.log('消息推送', req.body)
+        const { ToUserName, FromUserName, MsgType, Content, CreateTime } = req.body
+        console.log('推送接收的账号', ToUserName, '创建时间', CreateTime)
+        
+        if (MsgType === 'text') {
+            const response = handleTextMessage(Content, FromUserName, ToUserName, CreateTime, req.body)
+            res.send(response)
+        } else {
+            res.send('success')
+        }
+    })
+    
+    app.post('/', async (req, res) => {
+        console.log('/ post 接口被调用')
+        
+        if (!validateWeixinSource(req)) {
+            res.status(400).send('Invalid request source')
+            return
+        }
+        
+        console.log('收到消息：', req.body)
+        console.log('发送回复结果：')
+    })
+    
+    // 启动服务器
+    app.listen(CONFIG.PORT, CONFIG.HOST)
+    console.log(`Running on http://${CONFIG.HOST}:${CONFIG.PORT}`)
+}
+
+// 启动应用
+main()
