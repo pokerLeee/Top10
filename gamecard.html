@@ -1,0 +1,101 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="styles.css">
+
+<div class="container">
+  <div class="section-title">本轮题目</div>
+  
+  <div class="card">
+    <div class="question" id="questionText"></div>
+    <div class="scale-label">
+      (<strong>1</strong>是最<span class="green" id="negativeText"></span>，<strong>10</strong>是最<span class="red" id="positiveText"></span>)
+    </div>
+  </div>
+
+  <div class="section-title">你的号码</div>
+  <div class="number-card">
+    <div class="random-number" id="randomNumber">5</div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="emoji">💩</div>
+    <div class="scale-container">
+      <div class="scale-number">1</div>
+      <div class="scale-bar">
+        <img src="topten.svg" class="topten-logo" alt="TOP TEN">
+      </div>
+      <div class="scale-number">10</div>
+    </div>
+    <div class="emoji">🦄</div>
+  </div>
+</div>
+
+<script>
+  window.onload = function() {
+    // 获取URL参数
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // 设置问题和标签文本
+    document.getElementById('questionText').textContent = decodeURIComponent(urlParams.get('question') || '说出一位YouTuber。');
+    document.getElementById('negativeText').textContent = decodeURIComponent(urlParams.get('negative') || '厌恶');
+    document.getElementById('positiveText').textContent = decodeURIComponent(urlParams.get('positive') || '喜爱');
+    
+    // 设置随机数
+    const scaleNumber = urlParams.get('scale') || Math.floor(Math.random() * 10) + 1;
+    document.getElementById('randomNumber').textContent = scaleNumber;
+    
+    // 根据题目类型设置卡片背景颜色和点击效果
+    const questionType = urlParams.get('type');
+    const card = document.querySelector('.card');
+    const numberCard = document.querySelector('.number-card');
+    
+    if (questionType === 'spicy') {
+      card.classList.add('spicy-card');
+      numberCard.classList.add('spicy-card');
+      // 添加点击事件，创建辣椒emoji
+      card.addEventListener('click', createSpicyEmoji);
+      numberCard.addEventListener('click', createSpicyEmoji);
+    } else if (questionType === 'extreme') {
+      card.classList.add('extreme-card');
+      numberCard.classList.add('extreme-card');
+      // 添加点击事件，创建紫色泡泡
+      card.addEventListener('click', createPoisonBubble);
+      numberCard.addEventListener('click', createPoisonBubble);
+    }
+  }
+  
+  // 创建辣椒emoji的函数
+  function createSpicyEmoji(event) {
+    const emoji = document.createElement('div');
+    emoji.textContent = '🌶️';
+    emoji.className = 'floating-emoji';
+    
+    // 设置初始位置为点击位置
+    emoji.style.left = (event.clientX - 10) + 'px';
+    emoji.style.top = (event.clientY - 10) + 'px';
+    
+    document.body.appendChild(emoji);
+    
+    // 动画结束后移除元素
+    emoji.addEventListener('animationend', () => {
+      document.body.removeChild(emoji);
+    });
+  }
+  
+  // 创建紫色泡泡的函数
+  function createPoisonBubble(event) {
+    const bubble = document.createElement('div');
+    bubble.className = 'poison-bubble';
+    
+    // 设置初始位置为点击位置
+    bubble.style.left = (event.clientX - 10) + 'px';
+    bubble.style.top = (event.clientY - 10) + 'px';
+    
+    document.body.appendChild(bubble);
+    
+    // 动画结束后移除元素
+    bubble.addEventListener('animationend', () => {
+      document.body.removeChild(bubble);
+    });
+  }
+</script> 

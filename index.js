@@ -21,12 +21,13 @@ app.use(bodyParser.urlencoded({ extended: true }))
 const client = axios.default
 
 const indexPage = fs.readFileSync('index.html', 'utf-8')
-
+const webPage = fs.readFileSync('web.html', 'utf-8')
 
 
 app.get('/', async (req, res) => {
     console.log('/ get 接口被调用')
-    res.send(indexPage)
+    //res.send(indexPage)
+    res.send(webPage)
 })
 
 /*

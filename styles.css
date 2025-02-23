@@ -1,0 +1,525 @@
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #087788;
+  position: relative;
+}
+
+/* 放射花纹 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: conic-gradient(
+    from 0deg at 50% 50%,
+    #087788 0deg 20deg,
+    #258B9D 20deg 40deg,
+    #087788 40deg 60deg,
+    #258B9D 60deg 80deg,
+    #087788 80deg 100deg,
+    #258B9D 100deg 120deg,
+    #087788 120deg 140deg,
+    #258B9D 140deg 160deg,
+    #087788 160deg 180deg,
+    #258B9D 180deg 200deg,
+    #087788 200deg 220deg,
+    #258B9D 220deg 240deg,
+    #087788 240deg 260deg,
+    #258B9D 260deg 280deg,
+    #087788 280deg 300deg,
+    #258B9D 300deg 320deg,
+    #087788 320deg 340deg,
+    #258B9D 340deg 360deg
+  );
+  mask-image: radial-gradient(circle at center, transparent 0%, black 30%);
+  -webkit-mask-image: radial-gradient(circle at center, transparent 0%, black 30%);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* SVG 背景 */
+body::after {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 250px;
+  transform: translate(-50%, -50%);
+  background-image: url('topten.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  max-width: 100%;
+  padding: 20px;
+  text-align: center;
+  color: white;
+  z-index: 1;
+  padding-bottom: 100px;
+  padding-top: 40px;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.test-button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #07c160;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.test-button:active {
+  background-color: #06ad54;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.form-group label {
+  color: white;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-field {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+  -webkit-appearance: none;  /* 移除默认的下拉箭头样式 */
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 1em;
+  padding-right: 32px;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #07c160;
+}
+
+.radio-group {
+  margin-top: 8px;
+}
+
+.radio-label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.start-button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #07c160;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.start-button:active {
+  background-color: #06ad54;
+}
+
+.room-info {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.room-number {
+  color: white;
+  font-size: 32px;
+  margin: 0 0 10px 0;
+}
+
+.room-details {
+  color: white;
+  font-size: 18px;
+  margin: 0;
+}
+
+.notice {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+}
+
+.share-text {
+  margin-top: 15px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.form-hint {
+  margin: 8px 0 0 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+}
+
+.flip-button-container {
+  margin-top: 30px;
+}
+
+.flip-button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #258B9D;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.flip-button:active {
+  background-color: #1a7080;
+}
+
+.game-card-button {
+  margin-top: 20px;
+}
+
+.result-container {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.result-text {
+  color: white;
+  font-size: 20px;
+  margin: 12px 0;
+  text-align: center;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.result-text:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.result-text.flipping {
+  animation: flip 0.6s ease-in-out;
+}
+
+@keyframes flip {
+  0% {
+    transform: rotateX(0deg);
+    background: rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    transform: rotateX(90deg);
+    background: rgba(255, 255, 255, 0.2);
+  }
+  100% {
+    transform: rotateX(0deg);
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.result-text.revealed {
+  background: rgba(255, 255, 255, 0.3);
+  cursor: default;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.result-text.error {
+  background: rgba(255, 0, 0, 0.3);
+  animation: none;
+  border-color: rgba(255, 0, 0, 0.2);
+}
+
+.result-text.error:hover {
+  background: rgba(255, 0, 0, 0.4);
+}
+
+.status-container {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.game-status {
+  color: white;
+  font-size: 20px;
+  margin: 0;
+  text-align: center;
+}
+
+/* 卡片样式 */
+.card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 500px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.question {
+  color: white;
+  font-size: 20px;
+  margin-bottom: 10px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.scale-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* 底部栏样式 */
+.bottom-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 2;
+}
+
+.scale-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-grow: 1;
+  max-width: 400px; /* 增加宽度 */
+}
+
+.scale-number {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.scale-bar {
+  flex-grow: 1;
+  height: 30px; /* 增加高度 */
+  background: linear-gradient(to right, #4bff4b, #ff4b4b);
+  border-radius: 15px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topten-logo {
+  height: 40px; /* 增加logo大小 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  filter: brightness(0) invert(1);
+  opacity: 1; /* 设置为完全不透明 */
+}
+
+.emoji {
+  font-size: 32px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.emoji:hover {
+  transform: scale(1.2);
+}
+
+/* 添加新的样式 */
+.section-title {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 30px 0 20px 0;
+  text-align: center;
+}
+
+.green {
+  color: #4bff4b;
+  font-weight: bold;
+}
+
+.red {
+  color: #ff4b4b;
+  font-weight: bold;
+}
+
+.number-card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 30px;
+  margin: 20px auto;
+  max-width: 200px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.random-number {
+  color: white;
+  font-size: 48px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* 辣椒红色卡片 */
+.spicy-card {
+  background: rgba(255, 59, 48, 0.25);
+  border-color: rgba(255, 59, 48, 0.5);
+  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2);
+}
+
+.spicy-card:hover {
+  box-shadow: 0 8px 16px rgba(255, 59, 48, 0.3);
+}
+
+/* 有毒紫色卡片 */
+.extreme-card {
+  background: rgba(128, 0, 128, 0.25);
+  border-color: rgba(128, 0, 128, 0.5);
+  box-shadow: 0 4px 12px rgba(128, 0, 128, 0.2);
+}
+
+.extreme-card:hover {
+  box-shadow: 0 8px 16px rgba(128, 0, 128, 0.3);
+}
+
+/* 浮动辣椒emoji动画 */
+.floating-emoji {
+  position: fixed;
+  font-size: 24px;
+  pointer-events: none;
+  z-index: 1000;
+  animation: floatUp 1s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* 紫色泡泡动画 */
+.poison-bubble {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(128, 0, 128, 0.6);
+  pointer-events: none;
+  z-index: 1000;
+  animation: bubbleFloat 1.5s ease-out forwards;
+  box-shadow: 0 0 10px rgba(128, 0, 128, 0.4);
+}
+
+@keyframes bubbleFloat {
+  0% {
+    transform: scale(0.3) translateY(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2) translateY(-50px);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(0.5) translateY(-100px);
+    opacity: 0;
+  }
+}
+
+/* 大便emoji动画 */
+.floating-poop {
+  position: fixed;
+  font-size: 32px;
+  pointer-events: none;
+  z-index: 1000;
+  animation: poopFloat 1s ease-out forwards;
+}
+
+@keyframes poopFloat {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-50px) scale(1.5) rotate(180deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-100px) scale(1) rotate(360deg);
+    opacity: 0;
+  }
+} 

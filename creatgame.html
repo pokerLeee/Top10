@@ -1,0 +1,85 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="styles.css">
+<script src="script.js"></script>
+
+<div class="container">
+  <!-- 创建游戏部分 -->
+  <div id="createSection">
+    <h1 class="title">创建游戏</h1>
+    
+    <div class="form-group">
+      <label for="playerCount">游戏人数</label>
+      <select id="playerCount" class="input-field">
+        <option value="2">2人</option>
+        <option value="3">3人</option>
+        <option value="4">4人</option>
+        <option value="5">5人</option>
+        <option value="6" selected>6人</option>
+        <option value="7">7人</option>
+        <option value="8">8人</option>
+        <option value="9">9人</option>
+      </select>
+      <p class="form-hint">推荐游戏人数6-8人</p>
+    </div>
+
+    <div class="form-group">
+      <label>题目类型</label>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input type="radio" name="questionType" value="mild" checked>
+          温和题目
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="questionType" value="spicy">
+          劲爆题目
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="questionType" value="extreme">
+          没有下限
+        </label>
+      </div>
+    </div>
+
+    <button class="start-button" onclick="createGame()">开始游戏</button>
+  </div>
+
+  <!-- 房间信息部分 -->
+  <div id="roomSection" style="display: none;">
+    <div class="room-info">
+      <h1 class="room-number" id="roomNumber">房间号：8888</h1>
+      <p class="room-details" id="roomDetails"></p>
+    </div>
+
+    <div class="notice">
+      <p>回复房间号，可以再次查看房间信息</p>
+      <p class="share-text">如果有玩家未关注脑洞量表助手，请将脑洞量表助手微信号(naodongliangbiaozhushou)分享给你的好友！</p>
+    </div>
+
+    <div class="flip-button-container">
+      <button class="flip-button" onclick="openGameResult()">开始翻牌</button>
+      <p class="form-hint">查看游戏结果</p>
+      <button class="flip-button game-card-button" onclick="openGameCard()">进入游戏卡片</button>
+      <p class="form-hint">查看游戏卡片</p>
+    </div>
+  </div>
+
+  <!-- 游戏结果部分 -->
+  <div id="resultSection" style="display: none;">
+    <h1 class="title">游戏结果</h1>
+    
+    <div class="status-container">
+      <p id="gameStatus" class="game-status">请翻牌</p>
+    </div>
+    
+    <div class="result-container">
+      <div id="playerResults"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function testClick() {
+    alert('按钮点击成功!');
+  }
+</script>
