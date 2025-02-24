@@ -56,6 +56,19 @@ class RoomState {
         return numbers;
     }
 
+    // 添加 regenerateScales 方法
+    regenerateScales() {
+        this.playerScales = this.generatePlayerScales();
+        // 更新所有玩家的 scale
+        for (const [userName, playerNumber] of this.players) {
+            const scale = this.playerScales[playerNumber - 1];
+            const userState = userStateMap.get(userName);
+            if (userState) {
+                userState.scale = scale;
+            }
+        }
+    }
+
     assignPlayer(fromUserName) {
         if (this.players.has(fromUserName)) {
             return {
@@ -85,7 +98,7 @@ class RoomState {
 
     changeQuestion(type) {
         this.currentQuestion = getRandomQuestion(type);
-        this.playerScales = this.generatePlayerScales();
+        this.regenerateScales();  // 换题时重新生成数字
         return this.currentQuestion;
     }
 }
@@ -304,13 +317,13 @@ const generateGameResponse = (roomNumber, fromUserName, toUserName, createTime, 
     const resultUrl = generateResultUrl(roomNumber, gameParams.currentPlayer, gameParams.scale, selectedQuestion.id, roomState.playerScales)
     
     const message = `房间号：${roomNumber}\n` +
-        `你是【${gameParams.currentPlayer}】号玩家，你的号码是【${numberToCircled(gameParams.scale)}】\n` +
+        `你是【${gameParams.currentPlayer}】号玩家，你的号码是 ${numberToCircled(gameParams.scale)}\n` +
         `本轮题目:\n` +
         `<a href='${gameUrl}'>点击查看题目卡片</a>\n` +
         `${selectedQuestion.question}\n` +
         `① 是最【${selectedQuestion.negative}】，⑩ 是最【${selectedQuestion.positive}】\n` +
         `<a href='${resultUrl}'>点击翻看结果</a>\n\n` +
-        `游戏结束回复【换】，即可更换题目`
+        `游戏结束回复【换】，可更换题目`
     
     return createTextResponse(message, fromUserName, toUserName, createTime);
 }
